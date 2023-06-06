@@ -38,7 +38,7 @@ def webhook():
 if __name__ == '__main__':
     # Set the webhook URL
     bot.delete_webhook()  # Remove any existing webhook
-    bot.set_webhook(url='https://your-webhook-url.com/telegram_webhook')  # Set your webhook URL
+    bot.set_webhook(url='https://fyp-telegram_webhook.onrender.com/telegram_webhook')  # Set your webhook URL
 
 
     # Start the Flask application
