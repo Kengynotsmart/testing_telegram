@@ -1,0 +1,45 @@
+from flask import Flask, request
+from telegram import Update
+from telegram.ext import CallbackContext, Dispatcher
+from telegram.ext import MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler
+import json
+
+app = Flask(__name__)
+
+# Create a bot instance
+bot_token = '6110830043:AAGnvJHWBK3vu33FjxfEE2QGrZBY2JpPQVM'
+updater = Updater(token=bot_token, use_context=True)
+dispatcher: Dispatcher = updater.dispatcher
+bot = updater.bot  # Access the bot instance
+
+# Define your command handlers
+
+
+def start_command(update: Update, context: CallbackContext):
+    # Handle the /start command
+    update.message.reply_text("Hello! I'm a Telegram bot.")
+
+
+# Add the start command handler to the dispatcher
+dispatcher.add_handler(CommandHandler('start', start_command))
+
+
+# Define the webhook route
+@app.route('/telegram_webhook', methods=['POST'])
+def webhook():
+    if request.headers.get('content-type') == 'application/json':
+        json_string = request.get_data().decode('utf-8')
+        update = Update.de_json(json.loads(json_string), bot)
+        dispatcher.process_update(update)
+    return 'ok'
+
+
+if __name__ == '__main__':
+    # Set the webhook URL
+    bot.delete_webhook()  # Remove any existing webhook
+    bot.set_webhook(url='https://your-webhook-url.com/telegram_webhook')  # Set your webhook URL
+
+    # Start the Flask application
+    app.run(host='0.0.0.0', port=8443)
+
